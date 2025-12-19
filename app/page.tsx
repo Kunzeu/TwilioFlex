@@ -33,7 +33,7 @@ export default function Home() {
 
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                     <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700 hover:border-purple-500 transition-colors duration-300">
-                        <div className="text-4xl mb-4">📞</div>
+                        <div className="text-4xl mb-4"></div>
                         <h3 className="text-xl font-semibold text-white mb-2">
                             Llamadas en Tiempo Real
                         </h3>
@@ -43,7 +43,7 @@ export default function Home() {
                     </div>
 
                     <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700 hover:border-purple-500 transition-colors duration-300">
-                        <div className="text-4xl mb-4">🎯</div>
+                        <div className="text-4xl mb-4"></div>
                         <h3 className="text-xl font-semibold text-white mb-2">
                             Interfaz Intuitiva
                         </h3>
@@ -53,7 +53,7 @@ export default function Home() {
                     </div>
 
                     <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700 hover:border-purple-500 transition-colors duration-300">
-                        <div className="text-4xl mb-4">🔒</div>
+                        <div className="text-4xl mb-4"></div>
                         <h3 className="text-xl font-semibold text-white mb-2">
                             Seguro y Confiable
                         </h3>

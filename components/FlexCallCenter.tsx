@@ -26,11 +26,10 @@ const FlexCallCenter: React.FC = () => {
     const [error, setError] = useState<string>('');
     const durationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Initialize Twilio Device
     useEffect(() => {
         const initDevice = async () => {
             try {
-                console.log('🔄 Inicializando Twilio Device...');
+                console.log('Inicializando Twilio Device...');
                 const response = await fetch('/api/token', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -40,49 +39,45 @@ const FlexCallCenter: React.FC = () => {
                 const data = await response.json();
 
                 if (data.error) {
-                    console.error('❌ Error getting token:', data.error);
+                    console.error('Error getting token:', data.error);
                     setCallStatus('Error: Configuración de Twilio requerida');
                     setError(data.error);
                     return;
                 }
 
-                console.log('✅ Token obtenido correctamente');
+                console.log(' Token obtenido correctamente');
                 const newDevice = new Device(data.token, {
                     logLevel: 1,
                     codecPreferences: ['opus' as any, 'pcmu' as any],
                 });
 
-                // Device event listeners
                 newDevice.on('registered', () => {
-                    console.log('✅ Device registered - Listo para recibir llamadas');
+                    console.log('Device registered - Listo para recibir llamadas');
                     setIsReady(true);
                     setAgentStatus('available');
-                    setCallStatus('✅ Listo para recibir llamadas');
+                    setCallStatus('Listo para recibir llamadas');
                     setError('');
                 });
 
                 newDevice.on('error', (error) => {
-                    console.error('❌ Device error:', error);
+                    console.error(' Device error:', error);
                     setCallStatus(`Error: ${error.message}`);
                     setError(error.message);
                 });
 
                 newDevice.on('incoming', (call) => {
-                    console.log('📞 Llamada entrante de:', call.parameters.From);
+                    console.log('Llamada entrante de:', call.parameters.From);
                     setCurrentCall(call);
-                    setCallStatus(`📞 LLAMADA ENTRANTE de ${call.parameters.From}`);
+                    setCallStatus(`LLAMADA ENTRANTE de ${call.parameters.From}`);
                     setAgentStatus('busy');
 
-                    // Auto-accept the call for testing
-                    console.log('🎯 Aceptando llamada automáticamente...');
+                    console.log(' Aceptando llamada automáticamente...');
                     setTimeout(() => {
                         call.accept();
                     }, 500);
-
-                    // Call event listeners
                     call.on('accept', () => {
-                        console.log('✅ Llamada aceptada');
-                        setCallStatus('🔊 EN LLAMADA');
+                        console.log(' Llamada aceptada');
+                        setCallStatus('EN LLAMADA');
                         startCallDuration();
                         addToCallHistory({
                             id: Date.now().toString(),
@@ -96,17 +91,17 @@ const FlexCallCenter: React.FC = () => {
                     });
 
                     call.on('disconnect', () => {
-                        console.log('📴 Llamada desconectada');
+                        console.log(' Llamada desconectada');
                         handleCallEnd();
                     });
 
                     call.on('cancel', () => {
-                        console.log('❌ Llamada cancelada');
+                        console.log(' Llamada cancelada');
                         handleCallEnd();
                     });
 
                     call.on('reject', () => {
-                        console.log('🚫 Llamada rechazada');
+                        console.log(' Llamada rechazada');
                         handleCallEnd();
                     });
                 });
@@ -114,7 +109,7 @@ const FlexCallCenter: React.FC = () => {
                 newDevice.register();
                 setDevice(newDevice);
             } catch (error) {
-                console.error('❌ Error initializing device:', error);
+                console.error(' Error initializing device:', error);
                 setCallStatus('Error al inicializar');
                 setError(String(error));
             }
@@ -163,7 +158,7 @@ const FlexCallCenter: React.FC = () => {
 
         setCallDuration(0);
         setTimeout(() => {
-            setCallStatus('✅ Listo para recibir llamadas');
+            setCallStatus('Listo para recibir llamadas');
         }, 2000);
     };
 
@@ -181,14 +176,14 @@ const FlexCallCenter: React.FC = () => {
         if (!device || !phoneNumber) return;
 
         try {
-            console.log('📞 Realizando llamada a:', phoneNumber);
+            console.log(' Realizando llamada a:', phoneNumber);
             const call = await device.connect({ params: { To: phoneNumber } });
             setCurrentCall(call);
-            setCallStatus(`📞 Llamando a ${phoneNumber}...`);
+            setCallStatus(` Llamando a ${phoneNumber}...`);
             setAgentStatus('busy');
 
             call.on('accept', () => {
-                setCallStatus('🔊 EN LLAMADA');
+                setCallStatus('EN LLAMADA');
                 startCallDuration();
                 addToCallHistory({
                     id: Date.now().toString(),
@@ -205,7 +200,7 @@ const FlexCallCenter: React.FC = () => {
                 handleCallEnd();
             });
         } catch (error) {
-            console.error('❌ Error making call:', error);
+            console.error('Error making call:', error);
             setCallStatus('Error al realizar llamada');
             setAgentStatus('available');
         }
@@ -250,7 +245,7 @@ const FlexCallCenter: React.FC = () => {
             }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold' }}>
-                        📞 Centro de Llamadas
+                        Centro de Llamadas
                     </h1>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -292,7 +287,7 @@ const FlexCallCenter: React.FC = () => {
                     textAlign: 'center'
                 }}>
                     <div style={{ fontSize: '80px', marginBottom: '20px' }}>
-                        {currentCall ? '📞' : isReady ? '✅' : '⏳'}
+                        {currentCall ? 'CALL' : isReady ? 'READY' : 'LOADING'}
                     </div>
                     <h2 style={{
                         fontSize: '32px',
@@ -324,7 +319,7 @@ const FlexCallCenter: React.FC = () => {
                             color: '#991b1b',
                             fontSize: '14px'
                         }}>
-                            ⚠️ {error}
+                            WARNING: {error}
                         </div>
                     )}
 
@@ -350,7 +345,7 @@ const FlexCallCenter: React.FC = () => {
                                     color: 'white'
                                 }}
                             >
-                                {isMuted ? '🔇 Activar Audio' : '🔊 Silenciar'}
+                                {isMuted ? 'Unmute' : 'Mute'}
                             </button>
                             <button
                                 onClick={hangUp}
@@ -365,7 +360,7 @@ const FlexCallCenter: React.FC = () => {
                                     color: 'white'
                                 }}
                             >
-                                📵 Colgar
+                                Hang Up
                             </button>
                         </div>
                     )}
@@ -381,7 +376,7 @@ const FlexCallCenter: React.FC = () => {
                         boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
                     }}>
                         <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px', color: '#1f2937' }}>
-                            Realizar Llamada
+                            Make Call
                         </h3>
                         <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
                             <input
@@ -415,7 +410,7 @@ const FlexCallCenter: React.FC = () => {
                                     color: 'white'
                                 }}
                             >
-                                📞 Llamar
+                                Call
                             </button>
                         </div>
                         <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '10px' }}>
@@ -433,7 +428,7 @@ const FlexCallCenter: React.FC = () => {
                         border: '2px solid #fbbf24'
                     }}>
                         <div style={{ display: 'flex', gap: '20px', alignItems: 'start' }}>
-                            <div style={{ fontSize: '40px' }}>⚠️</div>
+                            <div style={{ fontSize: '40px' }}>!</div>
                             <div>
                                 <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#92400e', marginBottom: '10px' }}>
                                     Configuración Requerida
@@ -459,11 +454,11 @@ const FlexCallCenter: React.FC = () => {
                     boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
                 }}>
                     <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px', color: '#1f2937' }}>
-                        📋 Historial de Llamadas
+                        Call History
                     </h3>
                     {callHistory.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: '40px', color: '#9ca3af' }}>
-                            <div style={{ fontSize: '48px', marginBottom: '10px' }}>📭</div>
+                            <div style={{ fontSize: '48px', marginBottom: '10px' }}>-</div>
                             <p>No hay llamadas registradas</p>
                         </div>
                     ) : (
@@ -483,7 +478,7 @@ const FlexCallCenter: React.FC = () => {
                                 >
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                                         <span style={{ fontSize: '24px' }}>
-                                            {call.direction === 'inbound' ? '📥' : '📤'}
+                                            {call.direction === 'inbound' ? 'IN' : 'OUT'}
                                         </span>
                                         <div>
                                             <p style={{ fontWeight: 'bold', color: '#1f2937', margin: 0 }}>

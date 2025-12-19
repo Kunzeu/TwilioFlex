@@ -20,22 +20,17 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Create an access token
         const token = new AccessToken(accountSid, apiKey, apiSecret, {
             identity: identity || 'agent',
-            ttl: 3600, // Token valid for 1 hour
+            ttl: 3600, 
         });
 
-        // Create a Voice grant
         const voiceGrant = new VoiceGrant({
             outgoingApplicationSid: twimlAppSid,
             incomingAllow: true,
         });
-
-        // Add the grant to the token
         token.addGrant(voiceGrant);
 
-        // Serialize the token to a JWT string
         return NextResponse.json({
             token: token.toJwt(),
             identity: identity || 'agent',

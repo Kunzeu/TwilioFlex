@@ -51,7 +51,7 @@ export default function AboutPage() {
                                     rel="noopener noreferrer"
                                     className="block text-pink-400 hover:text-pink-300 transition-colors"
                                 >
-                                    🔧 Consola de Twilio
+                                     Consola de Twilio
                                 </a>
                                 <a
                                     href="https://support.twilio.com"
@@ -59,7 +59,7 @@ export default function AboutPage() {
                                     rel="noopener noreferrer"
                                     className="block text-pink-400 hover:text-pink-300 transition-colors"
                                 >
-                                    💬 Soporte de Twilio
+                                     Soporte de Twilio
                                 </a>
                             </div>
                         </section>
